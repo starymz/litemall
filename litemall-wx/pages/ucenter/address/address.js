@@ -5,28 +5,30 @@ var app = getApp();
 Page({
   data: {
     addressList: [],
+    total: 0
   },
-  onLoad: function (options) {
+  onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
   },
-  onReady: function () {
+  onReady: function() {
     // 页面渲染完成
   },
-  onShow: function () {
+  onShow: function() {
     // 页面显示
     this.getAddressList();
   },
-  getAddressList (){
+  getAddressList() {
     let that = this;
-    util.request(api.AddressList).then(function (res) {
+    util.request(api.AddressList).then(function(res) {
       if (res.errno === 0) {
         that.setData({
-          addressList: res.data
+          addressList: res.data.list,
+          total: res.data.total
         });
       }
     });
   },
-  addressAddOrUpdate (event) {
+  addressAddOrUpdate(event) {
     console.log(event)
 
     //返回之前，先取出上一页对象，并设置addressId
@@ -55,13 +57,13 @@ Page({
       })
     }
   },
-  deleteAddress(event){
+  deleteAddress(event) {
     console.log(event.target)
     let that = this;
     wx.showModal({
       title: '',
       content: '确定要删除地址？',
-      success: function (res) {
+      success: function(res) {
         if (res.confirm) {
           let addressId = event.target.dataset.addressId;
           util.request(api.AddressDelete, {
@@ -80,12 +82,12 @@ Page({
       }
     })
     return false;
-    
+
   },
-  onHide: function () {
+  onHide: function() {
     // 页面隐藏
   },
-  onUnload: function () {
+  onUnload: function() {
     // 页面关闭
   }
 })

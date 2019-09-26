@@ -8,7 +8,7 @@ Page({
     type: 0,
     collectList: [],
     page: 1,
-    size: 10,
+    limit: 10,
     totalPages: 1
   },
   getCollectList() {
@@ -16,17 +16,21 @@ Page({
       title: '加载中...',
     });
     let that = this;
-    util.request(api.CollectList, { type: that.data.type, page: that.data.page, size: that.data.size }).then(function (res) {
+    util.request(api.CollectList, {
+      type: that.data.type,
+      page: that.data.page,
+      limit: that.data.limit
+    }).then(function(res) {
       if (res.errno === 0) {
         that.setData({
-          collectList: that.data.collectList.concat(res.data.collectList),
-          totalPages: res.data.totalPages
+          collectList: that.data.collectList.concat(res.data.list),
+          totalPages: res.data.pages
         });
       }
       wx.hideLoading();
     });
   },
-  onLoad: function (options) {
+  onLoad: function(options) {
     this.getCollectList();
   },
   onReachBottom() {
@@ -43,22 +47,22 @@ Page({
       });
       return false;
     }
-  },  
-  onReady: function () {
+  },
+  onReady: function() {
 
   },
-  onShow: function () {
+  onShow: function() {
 
   },
-  onHide: function () {
+  onHide: function() {
     // 页面隐藏
 
   },
-  onUnload: function () {
+  onUnload: function() {
     // 页面关闭
   },
   openGoods(event) {
-    
+
     let that = this;
     let index = event.currentTarget.dataset.index;
     let goodsId = this.data.collectList[index].valueId;
@@ -71,10 +75,13 @@ Page({
       wx.showModal({
         title: '',
         content: '确定删除吗？',
-        success: function (res) {
+        success: function(res) {
           if (res.confirm) {
-            
-            util.request(api.CollectAddOrDelete, { type: that.data.type, valueId: goodsId}, 'POST').then(function (res) {
+
+            util.request(api.CollectAddOrDelete, {
+              type: that.data.type,
+              valueId: goodsId
+            }, 'POST').then(function(res) {
               if (res.errno === 0) {
                 console.log(res.data);
                 wx.showToast({
@@ -92,24 +99,24 @@ Page({
         }
       })
     } else {
-      
+
       wx.navigateTo({
         url: '/pages/goods/goods?id=' + goodsId,
       });
-    }  
+    }
   },
   //按下事件开始  
-  touchStart: function (e) {
+  touchStart: function(e) {
     let that = this;
     that.setData({
       touchStart: e.timeStamp
     })
   },
   //按下事件结束  
-  touchEnd: function (e) {
+  touchEnd: function(e) {
     let that = this;
     that.setData({
       touchEnd: e.timeStamp
     })
-  }, 
+  },
 })

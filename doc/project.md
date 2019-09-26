@@ -2,30 +2,31 @@
 
 ## 1.1 简介
 
-litemall是一个简单的商场系统，基于现有的开源项目，重新实现一个完整的前后端项目，包含小程序客户端和网页管理端。
+litemall是一个简单的商场系统，基于现有的开源项目，重新实现一个完整的前后端项目，包含小程序客户端、移动客户端和网页管理端。
 
 ![](./pic1/1-1.png)    
 
 
-项目的架构是三个系统和六个模块：
+项目的架构是四个系统和九个模块：
 
 * 基础系统子系统(platform)
 
   由数据库、litemall-core模块、litemall-db模块和litemall-all模块组成;
 
-* 小商场子系统(wxmall)
+* 小商场子系统(wxmall，即weixin mall)
 
   由litemall-wx-api模块、litemall-wx模块和renard-wx模块组成；
 
+* 轻商城子系统(mobmall，即mobile mall)
+
+  由litemall-wx-api模块和litemall-vue模块组成。
+  注意，目前这里移动商城子系统的后端和小商场子系统是一样的。
+    
 * 管理后台子系统(admin)
 
   由litemall-admin-api模块和litemall-admin模块组成。
 
-* 简单商城系统(mall)
-
-  这里仅列出，目前没有开发计划。
-
-而六个模块的开发设计到三种技术栈：
+而九个模块的开发设计到三种技术栈：
 
 * Spring Boot技术栈
 
@@ -38,19 +39,41 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
   
 * Vue技术栈
 
-  采用VSC开发工具，开发litemall-admin模块。
+  采用VSC开发工具，开发litemall-admin模块和litemall-vue模块。
+
+### 1.1.1 项目特点
+
+项目存在以下特点：
+
+* 数据库方面，只是简单的表，表和表之间的依赖关系没有采用外键设计，而是依赖Java代码在service层面或者业务层面保证。这样做的好处是数据库频繁改动很方便，不会因为外键而导致数据库难以修改;
+* 涉及三种技术栈，但是每种技术栈仅涉及最基础的技术；
+  * 后端技术栈，仅涉及 Spring，Spring Boot, Spring MVC和Mybatis技术，其他后端技术暂时不采用;
+  * 小程序技术栈，仅涉及miniprogram官方文档；
+  * 前端技术栈，仅涉及vue, vuex, vue-route和element技术；
+* 安全方面，仅采用最基本的代码，提供简单基本的安全服务;
+* 性能方面，没有涉及内存数据库缓存功能，而是完全依赖MySQL;
+* 对象存储服务方面，支持本地存储和第三方云存储方案。
+* 消息通知方面，支持邮件通知、第三方云短信通知和微信模板通知；
+* 部署方便，支持多服务部署和一键部署脚本；
+* 文档全面，虽然还在开发中，但是规划中文档和代码注释一定会完成，帮助开发者理解项目。
+
+总之，目前的系统只是为了学习技术和业务而开发的一个简单商场原型系统。虽然缺失很多企业级功能，但是是完整和合理的原型系统。
+
+注意：
+> 以上特点并不一定是优点。
 
 ## 1.2 系统功能
 
-从业务功能上，目前由五个业务模块组成：
+从业务功能上，目前由六个业务模块组成：
 
 * 会员业务模块
 * 商场业务模块
 * 商品业务模块
 * 推广业务模块
 * 系统业务模块
+* 配置业务模块
 
-### 1.2.1 小程序端功能
+### 1.2.1 小商城功能
 
 * 首页
 * 专题列表、专题详情
@@ -68,7 +91,29 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
 * 地址列表、地址添加、地址删除
 * 收藏、足迹、关于
 
-### 1.2.2 管理平台功能
+### 1.2.2 轻商城功能
+
+**目前还在开发中，不稳定**
+
+以下是准备完成的功能：
+
+* 首页
+* 专题列表、专题详情
+* 分类列表、分类详情
+* 品牌列表、品牌详情
+* 新品首发、人气推荐
+* 团购
+* 搜索
+* 商品详情
+* 商品评价列表、商品评价
+* 购物车
+* 下单
+* 个人
+* 订单列表、订单详情
+* 地址列表、地址添加、地址删除
+* 收藏、足迹、关于
+
+### 1.2.3 管理平台功能
 
 * 会员管理
   * 会员管理
@@ -98,35 +143,92 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
 * 系统管理
   * 管理员
   * 对象存储
-  * 权限管理（待定）
+  * 权限管理
   * 定时任务（待定）
-  * 参数管理（待定）
-  * 系统日志（待定）
-* 统计管理
+  * 操作日志
+* 配置管理
+  * 商场配置
+  * 小程序配置
+  * 运费配置
+  * 订单配置
+* 统计报表
   * 用户统计
   * 订单统计
   * 商品统计
 
-## 1.3 项目特点
+## 1.3 项目技术
 
-存在以下特点：
+### 1.3.1 技术参考
 
-* 数据库方面，只是简单的表，表和表之间的依赖关系没有采用外键设计，而是依赖Java代码在service层面或者业务层面保证。这样做的好处是数据库频繁改动很方便，不会因为外键而导致数据库难以修改;
-* 涉及三种技术栈，但是每种技术栈仅涉及最基础的技术；
-  * 后端技术栈，仅涉及 Spring，Spring Boot, Spring MVC和Mybatis技术，其他后端技术暂时不采用;
-  * 小程序技术栈，仅涉及miniprogram官方文档；
-  * 前端技术栈，仅涉及vue, vuex, vue-route和element技术；
-* 安全方面，仅采用最基本的代码，提供简单基本的安全服务;
-* 性能方面，没有涉及内存数据库缓存功能，而是完全依赖MySQL;
-* 对象存储服务方面，支持本地存储和第三方云存储方案。
-* 消息通知方面，支持邮件通知、第三方云短信通知和微信模板通知；
-* 部署方便，支持多服务部署和一键部署脚本；
-* 文档全面，虽然还在开发中，但是规划中文档和代码注释一定会完成，帮助开发者理解项目。
+#### 1.3.1.1 Spring Boot技术
 
-总之，目前的系统只是为了学习技术和业务而开发的一个简单商场原型系统。虽然缺失很多企业级功能，但是是完整和合理的原型系统。
+Spring Boot技术栈参考以下文档或者项目：
 
-注意：
-> 以上特点并不一定是优点。
+1. MySQL
+
+   了解创建数据库和表、添加、查询、更新和删除即可。
+    
+2. Spring Boot 2.x
+
+    * https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/reference/htmlsingle/#getting-started-introducing-spring-boot
+    * https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/reference/htmlsingle/#using-boot-maven
+
+    这里需要了解RestController, Service等注解，以及如何使用自动化配置。 
+    Spring Boot支持很多功能，开发者使用时查阅。
+    
+3. Mybatis
+
+    * http://www.mybatis.org/mybatis-3/
+    * http://www.mybatis.org/mybatis-3/java-api.html
+    * http://www.mybatis.org/mybatis-3/sqlmap-xml.html
+ 
+    这里可以简单了解，而使用Mybatis Generator来生成Java代码使用即可。
+    
+4. Mybatis Generator
+
+    * http://www.mybatis.org/generator/running/runningWithMaven.html
+    * http://www.mybatis.org/generator/generatedobjects/results.html
+    * http://www.mybatis.org/generator/generatedobjects/exampleClassUsage.html
+    
+5. Mybatis PageHelper
+
+    * https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/en/HowToUse.md
+    
+#### 1.3.1.2 小程序技术
+
+1. 小程序
+
+    * https://developers.weixin.qq.com/miniprogram/dev/index.html
+    * https://developers.weixin.qq.com/miniprogram/dev/component/
+    * https://developers.weixin.qq.com/miniprogram/dev/api/
+    * https://developers.weixin.qq.com/community/develop
+    
+    建议小程序方面遇到问题，可以到官方社区查找。
+
+2. 微信支付
+
+    * https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_3&index=1
+    
+#### 1.3.1.3 Vue技术
+
+1. Vue
+
+    * https://cn.vuejs.org/index.html
+
+2. Vant
+
+    * https://youzan.github.io/vant/#/zh-CN/intro
+
+3. Element
+
+    * https://element.eleme.cn/#/zh-CN/component/installation
+
+4. vue-element-admin
+
+    * https://github.com/PanJiaChen/vue-element-admin
+    * https://panjiachen.github.io/vue-element-admin-site/zh/
+    
+### 1.3.2 项目阶段
 
 接下来，从项目的开发、部署（测试）和上线三个阶段介绍litemall。
 
@@ -167,6 +269,8 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
 先不开发和测试这样业务功能，等其他功能开发完毕和部署测试成功以后，再来开发这些线上环境才能
 运行的功能，此时会有一个好的基础。
 
+接下来，分别从开发阶段、部署阶段和上线阶段三种阶段，分别介绍不同的方案实践要点。
+
 ## 1.4 开发方案
 
 ![](pic1/1-2.png)
@@ -184,14 +288,30 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
 
 数据库环境设置过程如下：
 
-1. 安装MySQL
+1. 安装MySQL;
 
-2. 创建数据库、用户权限、数据库表和测试数据
+2. 创建数据库、用户权限、数据库表和测试数据;
+   数据库文件存放在litemall-db/sql文件夹中，请开发者在MySQL中
+   按照顺序运行以下脚本:
+   * litemall_schema.sql，用于创建数据库、用户和权限;
+   * litemall_table.sql，用于创建表;
+   * litemall_data.sql，用于导入测试数据。
 
-   数据库文件存放在litemall-db/sql文件夹中，其中litemall_schema.sql创建数据库和用户权限，
-   litemall_table.sql则创建表，litemall_data.sql则是测试数据。
+注意：
+> 建议采用命令行或者MySQL Workbench。如果采用Navicat可能导入失败。
 
-   注意：建议采用命令行或者MySQL Workbench。如果采用navicat可能导入失败。
+如果开发者运行litemall_schema.sql失败，可以打开该文件：
+```
+drop database if exists litemall;
+drop user if exists 'litemall'@'localhost';
+create database litemall default character set utf8mb4 collate utf8mb4_unicode_ci;
+use litemall;
+create user 'litemall'@'localhost' identified by 'litemall123456';
+grant all privileges on litemall.* to 'litemall'@'localhost';
+flush privilege
+```
+可以看到几个命令，用于创建数据库、用户和访问权限，因此开发者可以利用
+命令或者工具完成这里的功能即可。
 
 ### 1.4.2 Spring Boot开发环境
 
@@ -249,13 +369,12 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
     如果出现JSON数据，则litemall-all模块运行正常。
     
 注意：
-> 1. 在上述开发步骤中，既介绍了Maven命令方式，也介绍了IDEA方式，
->    但是仍然建议开发者开发阶段采用IDEA。
-> 2. 以上是本人开发过程中采用的一些步骤，开发者可不拘泥于这些步骤。
->    如果开发者没有按照本人步骤开发而出现相关问题，也请**不要**咨询，
->    本人**没有**相关解决经验。
-> 3. 开发者使用IDEA导入项目或者运行项目的时候会出现软件卡顿的现象，这通常是litemall-admin的
->    node_modules文件夹内自动下载了大量的litemall-admin的依赖库，当IDEA尝试索引该文件夹内的大量文件时
+> 1. 上述步骤中，既介绍了Maven命令方式，也介绍了IDEA方式，
+>    但是建议开发者开发阶段采用IDEA。
+> 2. 上述步骤只是一种实践方式，开发者可不拘泥于这些步骤，多实践。
+>    当然，如果开发者不采用这里步骤而出现问题，请自行解决。
+> 3. 开发者使用IDEA导入项目或者运行项目时可能会出现**软件卡顿**的现象，这通常是litemall-admin或者litemall-vue的
+>    node_modules文件夹内自动下载了大量的依赖库，当IDEA尝试索引该文件夹内的大量文件时
 >    则出现IDEA卡顿的现象，具体解决方式可以参见[FAQ](./FAQ.md)
 
 ### 1.4.3 微信小程序开发环境
@@ -290,7 +409,7 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
     
 4. 请确定litemall-all模块已经运行，然后点击`登录`，如果能够成功登录，则表明管理后台的前端和后端对接成功，运行正常。
 
-目前本人采用VSC（Visual Studio Code）来开发litemall-admin项目，开发者也可以采用其他熟悉的IDE。
+本项目采用VSC（Visual Studio Code）开发litemall-admin模块，开发者也可以采用其他熟悉的IDE。
 
 ### 1.4.5 项目配置
 
@@ -316,7 +435,7 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
     // 局域网测试使用
     // var WxApiRoot = 'http://192.168.0.101:8080/wx/';
     // 云平台部署时使用
-    // var WxApiRoot = 'http://122.152.206.172:8080/wx/';
+    // var WxApiRoot = 'http://118.24.0.153:8080/wx/';
     // 云平台上线时使用
     // var WxApiRoot = 'https://www.menethil.com.cn/wx/';
 
@@ -341,24 +460,21 @@ litemall是一个简单的商场系统，基于现有的开源项目，重新实
 
 #### 1.4.5.1 日志配置
 
-如果开发者启动litemall-all模块，则需要配置该模块的`application.yml`文件
+如果开发者启动litemall-all模块，则需要配置该模块的`logback-spring.xml`文件
 ```
-logging:
-  level:
-    root:  ERROR
-    org.springframework:  ERROR
-    org.mybatis:  ERROR
-    org.linlinjava.litemall.core:  ERROR
-    org.linlinjava.litemall.db:  ERROR
-    org.linlinjava.litemall.admin:  ERROR
-    org.linlinjava.litemall.wx:  ERROR
-    org.linlinjava.litemall:  ERROR
+    <logger name="org.mybatis" level="ERROR" />
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.linlinjava.litemall.core" level="DEBUG" />
+    <logger name="org.linlinjava.litemall.db" level="DEBUG" />
+    <logger name="org.linlinjava.litemall.admin" level="DEBUG" />
+    <logger name="org.linlinjava.litemall.wx" level="DEBUG" />
+    <logger name="org.linlinjava.litemall" level="DEBUG" />
 ```
 
-具体如何配置，请自行学习Spring Boot的日志配置。
+具体如何配置，请自行学习Spring Boot的日志配置和logback日志配置。
 
 `org.linlinjava.litemall.core`定义litemall-core模块的日志级别
-`org.linlinjava.litemall.db`定义litemall-core模块的日志级别
+`org.linlinjava.litemall.db`定义litemall-db模块的日志级别
 `org.linlinjava.litemall.wx`定义litemall-wx-api模块的日志级别
 `org.linlinjava.litemall.admin`定义litemall-admin-api模块的日志级别
 `org.linlinjava.litemall`而定义litemall所有后端模块的日志级别
@@ -368,7 +484,7 @@ logging:
 
 注意：
 > 如果开发者独立启动litemall-wx-api模块，那么则需要配置litemall-wx-api模块的
-> `application.yml`文件来设置日志
+> 日志配置方式。
 
 #### 1.4.5.2 数据库连接配置
 
@@ -426,10 +542,10 @@ litemall:
     notify-url: https://www.example.com/wx/order/pay-notify
 ```
 
-这里的`mch-id`和`mch-key`需要开发者在[微信支付平台](https://pay.weixin.qq.com/)注册获取。
+这里的`mch-id`和`mch-key`需要开发者在[微信商户平台](https://pay.weixin.qq.com/)注册获取。
 
 而这里的`notify-url`则应该是项目上线以后微信支付回调地址，当微信支付成功或者失败，
-微信支付平台将向回调地址发生成功或者失败的数据，因此需要确保该地址是
+微信商户平台将向回调地址发生成功或者失败的数据，因此需要确保该地址是
 litemall-wx-api模块的WxOrderController类的payNotify方法所服务的API地址。
 
 开发阶段可以采用一些技术实现临时外网地址映射本地，开发者可以百度关键字“微信 内网穿透”自行学习。
@@ -589,6 +705,10 @@ litemall:
 验证配置成功：
 当配置好信息以后，开发者可以litemall-core模块的`ExpressTest`测试类中设置快递公司编码和
 真实测试快递单号，独立启动`ExpressTest`测试类查询物流信息。
+
+注意：
+> 一部分快递公司（例如顺丰速运、申通快递等）的轨迹查询在开发环境下不支持，
+> 具体支持情况或者使用限制请阅读[官方资料](http://www.kdniao.com/UserCenter/v2/UserHome.aspx)
 
 #### 1.4.5.9 对象存储配置
 
@@ -773,7 +893,7 @@ sudo apt-get install mysql-server
 sudo apt-get install mysql-client
 ```
     
-### 1.5.1.4 项目打包
+#### 1.5.1.4 项目打包
 
 1. 在主机或者开发机打包项目到deploy；
     ```
@@ -790,11 +910,13 @@ sudo apt-get install mysql-client
     mvn clean package
     cp -f ./litemall-all/target/litemall-all-*-exec.jar ./deploy/litemall/litemall.jar
     ```
-    这里的工作是：
-    1. 把数据库文件拷贝到deploy/db文件夹
-    2. 编译litemall-admin项目
+    
+    这里脚本的作用是：
+    
+    1. 把数据库文件拷贝到deploy/db文件夹；
+    2. 编译litemall-admin项目；
     3. 编译litemall-all模块，同时把litemall-admin编译得到的静态文件拷贝到
-       litemall-all模块的static目录
+       litemall-all模块的static目录。
        
 2. 修改litemall文件夹下面的*.yml外部配置文件，当litemall-all模块启动时会
     加载外部配置文件，而覆盖默认jar包内部的配置文件。
@@ -815,7 +937,7 @@ sudo apt-get install mysql-client
 存放开发主机运行的脚本，包括package.sh脚本和lazy.sh脚本。
 由于是本地开发主机运行，因此开发者可以不用上传到远程主机。
 
-### 1.5.1.5 项目部署
+#### 1.5.1.5 项目部署
 
 1. 远程主机环境（MySQL和JDK1.8）已经安装好，请确保云主机的安全组已经允许相应的端口。
 2. 导入db/litemall.sql
@@ -836,7 +958,12 @@ sudo apt-get install mysql-client
     http://xxx.xxx.xxx.xxx:8080/#/login
     ```
 
-### 1.5.1.6 项目辅助脚本
+注意：
+> 开发者访问以上三个地址都能成功，但是管理后台点击登录时会报错网络连接不成功。
+> 这里很可能是开发者litemall-admin模块的`config/dep.env.js`或者`condig/prod.env.js`
+> 没有设置正确的管理后台后端地址，例如这里的`http://xxx.xxx.xxx.xxx:8080/admin`
+
+#### 1.5.1.6 项目辅助脚本
 
 在前面的项目打包和项目部署中都是采用手动命令来部署。
 这里可以写一些脚本简化：
@@ -876,7 +1003,7 @@ cd litemall
 ### 1.5.2 单机多服务部署方案
 
 
-### 1.5.2 集群式云部署方案
+### 1.5.3 集群式云部署方案
 
 由于本项目是面向微小型企业的小商城系统，因此预期的分布式部署方案是
 
@@ -1037,7 +1164,6 @@ http://www.example.com
 3. 重启nginx
 
 注意：
-> 本人对nginx也不了解，仅仅依靠网络知识配置了简单的效果。
 > 更多配置方法和功能，请开发者自行学习。
 
 ### 1.6.3 小商场上线
@@ -1049,7 +1175,7 @@ http://www.example.com
 1. litemall-wx-api模块的WxOrderController类的payNotify方法的链接换成合适的地址。
 
    注意：
-   > 换成什么地址都可以，但是这里不应该暴露出来。也就是说这个地址是微信支付平台
+   > 换成什么地址都可以，但是这里不应该暴露出来。也就是说这个地址是微信商户平台
    > 和这里的小商场后端服务之间的交互API，对外公开会存在安全隐患。
    
 2. litemall-core模块需要配置application-core.yml
@@ -1080,9 +1206,12 @@ http://www.example.com
    这样可以避免开发者对模块内部的开发配置文件造成修改；
 3. 管理后台前端litemall-admin模块`config/prod.env.js`中的`BASE_API`设置管理后台后端服务的服务地址。
 
-### 1.6.5 上线脚本
+### 1.6.5 项目评估
 
-本项目目前没有上线脚本，不过可以参考1.5.1节中的部署脚本。
+本项目只是参考项目，项目代码质量和功能不可能符合开发者的最终需求，
+因此开发者**请务必仔细评估项目代码**。
+
+特别提醒，上线前管理员用户名和密码请更改，不能采用这里的默认值。
 
 ### 1.6.6 项目优化
 
@@ -1114,8 +1243,70 @@ litemall-admin编译得到的前端文件在第一次加载时相当耗时，这
 
 #### 1.6.6.4 nginx优化
 
-本人对nginx不是很熟悉，而nginx还存在很多可以调整优化的部分，这里建议开发者
-根据自己业务或架构情况优化。
+建议开发者根据自己业务或架构情况优化。
+
+### 1.6.7 项目安全
+
+项目一旦正式上线，即对外正式服务。但是服务同时，可能会存在安全隐患甚至黑客攻击。
+
+本节仅列举一些注意事项，欢迎开发者补充和完善。
+
+#### 1.6.7.1 账户安全
+
+这里的账号安全，既包括商城端用户账户，也包括管理后台端管理员账户。
+
+目前账号安全还缺乏一点的保护措施，例如
+
+* 用户密码失败超过阈值，则显示验证码；
+* 用户密码失败超过阈值，则取消登录；
+* 用户密码失败超过阈值，则需要手机验证码；
+
+#### 1.6.7.2 关键业务记录
+
+有关订单或者金钱相关的操作，建议开发者尽可能记录在数据库中，以便以后回溯。
+
+#### 1.6.7.3 API统一调整
+
+本项目公布了参考API接口，如果出现BUG可能会被黑客作为入口。
+建议开发者上线之前可以统一调整接口，以减少安全隐患。
+
+#### 1.6.7.4 对账
+
+本项目管理后台没有对账功能，建议开发者可以开发对账比对商场的状态是否正常。
+
+#### 1.6.7.5 取消或者限制退款
+
+本项目不支持自动退款功能，而是在管理后台通过管理员点击退款按钮来人工退款。
+但是仍然可能存在隐患，例如黑客通过漏洞进入管理后台从而进行不合理的退款操作。
+
+因此建议开发者可以取消管理后台的退款按钮，而仅仅保持退款信息，管理员可以登录
+微信官方支付平台进行退款操作。
+
+或者建议开发者基于一定的业务逻辑或场景限制管理后台的退款功能。例如，设置当天
+退款限额从而保证不会产生无限退款操作。
+
+#### 1.6.7.6 资源限制访问
+
+一些API操作涉及到后端服务器资源，因此需要做一定的限制，防止有限资源被恶意消耗。
+
+有限资源可能包括：
+
+* 验证码
+* 图片上传
+
+一些限制措施可能包括：
+
+* 限制单个IP的访问频率
+* 限制用户上传图片数量
+
+#### 1.6.7.n 跟踪本项目进展
+
+一旦有开发者反馈BUG，本项目会优先解决并及时上传补丁。
+因此建议开发者跟踪本项目进展，留意每次BUG修复的commit。
+
+同时也希望开发者发现任何BUG都及时反馈。
+
+目前还不存在LTS版本，未来业务稳定后可能会发布。
 
 ## 1.7 项目管理
 
@@ -1132,6 +1323,8 @@ litemall-admin编译得到的前端文件在第一次加载时相当耗时，这
 * litemall-wx-api/.gitignore
 * litemall-all/.gitignore
 * .gitignore
+
+开发者可以采用单一.gitignore文件。
 
 ### 1.7.2 项目自动部署
 
@@ -1154,4 +1347,172 @@ litemall-admin编译得到的前端文件在第一次加载时相当耗时，这
 
 目前不支持
 
-### 1.7.3 Spring Boot配置方案
+### 1.7.3 项目代码风格
+
+由于本项目涉及三种技术栈，因此针对这三种技术栈也存在三种代码风格。
+
+如果开发者想要贡献代码，建议尽可能保证代码符合这里的规范。
+
+#### 1.7.3.1 Spring Boot技术栈代码风格
+
+这里的代码风格采用IDEA默认代码风格。
+
+修改代码后，利用`Code`菜单的`Reformat Code`即可格式化代码。
+
+#### 1.7.3.2 小程序技术栈代码风格
+
+这里的代码风格采用微信开发者工具默认代码风格。
+
+修改代码以后，利用`编辑`菜单的`格式化代码`即可格式化代码。
+
+#### 1.7.3.3 Vue技术栈代码风格
+
+这里的代码风格采用ESLint配置代码风格，具体参考vue-element-admin下项目的
+[ESLint文档](https://panjiachen.github.io/vue-element-admin-site/zh/guide/advanced/eslint.html),
+特别是`vscode 配置 ESLint`内容。
+
+注意：
+> Visual Studio Code编辑器中右键存在`格式化代码`的选项，但是请不要使用这种方式，
+> 因为VSC自带的格式化代码风格和ESLint代码风格可能不完全一致。
+
+### 1.7.4 Spring Boot多模块多阶段配置
+
+目前后端服务采用Spring Boot多模块方案，结构清晰、易于测试。
+
+但是存在一个问题，即多模块配置依赖。
+例如，litemall-db模块存在数据库配置信息，那么其他模块如何引入
+litemall-db模块的配置信息呢？
+
+最简单的方式，就是其他模块把litemall-db模块的配置信息拷贝到自己的
+application配置文件中，但是问题就是数据库信息一旦改变则其他模块又要
+再次手动修改，非常不方便。
+
+目前本项目采用一种基于`spring.profiles.active`的方式，细节如下：
+1. litemall-db模块存在application.yml和application-db.yml两个配置文件，
+    在application-db.yml配置文件中存放数据库配置信息；
+2. litemall-core模块也存在application.yml和application-core.yml两个配置文件,
+    在application-core.yml配置文件中存放core模块的一些配置信息，而在application.yml
+    中存在这样一个配置：
+    ```
+    spring:
+        profiles:
+            active: core, db
+    ```
+    因此，如果单独启动litemall-core模块，则会先读取application.yml配置文件，然后基于
+    系统会根据`spring.profiles.active`读取application-db.yml和application-core.yml配置文件，
+    因此就会自动读取litemall-db模块的配置文件。
+3. 以此类推，在litemall-all模块中存在application.yml配置文件，其中内容是
+    ```
+    spring:
+        profiles:
+            active:  db, core, admin, wx
+    ```
+    因此，系统启动litemall-all模块以后，则会先读取application.yml配置文件，然后基于
+    `spring.profiles.active`进一步读取application-db.yml、application-core.yml、
+    application-admin.yml和application-wx.yml四个模块的配置文件。
+    
+但是，虽然以上方案解决了多模块配置依赖问题，但是又会导致另外一个问题，如何支持不同profile，
+也就是开发阶段、测试阶段和上线阶段配置不同。
+
+这里介绍本项目的思路，就是基于Spring Boot的配置加载顺序，采用外部配置文件覆盖jar包内部配置文件。
+1. 开发阶段，系统的配置信息在模块的resources目录配置文件中；
+2. 测试或者部署阶段，系统打包成一个litemall.jar二进制jar包，jar包内部配置文件是之前
+    开发阶段的配置文件，此时在litemall.jar的同级目录创建相同的配置文件，在这些配置文件则
+    保存了测试或者部署阶段的配置信息。启动litemall.jar时，系统会读取当前目录的配置文件，而
+    不再读取jar包内部的配置文件。
+3. 上线阶段，同样地，在litemall.jar包同级目录创建上线配置文件。
+
+此外，这里还可以采用另外一种思路，如下图：
+![](pic1/1-13.png)
+![](pic1/1-14.png)
+![](pic1/1-15.png)
+
+其实原理也很简单，就是配置文件采用application-{module}-{profile}.yml来支持不同模块不同阶段的配置需求。
+
+### 1.7.5 前后端校验
+
+本项目是前后端分离项目，当用户或者管理员在系统中输入数据时，
+数据需要进行两层校验。
+
+* 第一层是前端校验，是对参数格式校验。
+* 第二层是后端校验，不仅对参数校验，还会根据业务场景进行校验。
+
+注意
+> 目前项目校验思路是这样，但是实际代码的校验还不完善，
+> 例如前端校验代码不完善，导致用户体验较差。
+
+### 1.7.6 后端响应错误码
+
+后端服务的响应结果是：
+```
+{
+    errno： 错误码，
+    errmsg：错误消息，
+    data：  响应数据
+}
+```
+
+当errno是0时，则data保存业务数据；
+当error是非0时，则业务失败，errmsg保存具体错误信息。
+
+目前，errno存在四种形式：
+* 4xx，前端错误，说明前端开发者需要重新了解后端接口使用规范：
+  * 401，参数错误，即前端没有传递后端需要的参数；
+  * 402，参数值错误，即前端传递的参数值不符合后端接收范围。
+* 5xx，后端系统错误，除501外，说明后端开发者应该继续优化代码，尽量避免返回后端系统错误码：
+  * 501，验证失败，即后端要求用户登录；
+  * 502，系统内部错误，即没有合适命名的后端内部错误；
+  * 503，业务不支持，即后端虽然定义了接口，但是还没有实现功能；
+  * 504，更新数据失效，即后端采用了乐观锁更新，而并发更新时存在数据更新失效；
+  * 505，更新数据失败，即后端数据库更新失败（正常情况应该更新成功）。
+* 6xx，管理后台后端业务错误码，具体见litemall-admin-api模块的`AdminResponseCode`类。
+* 7xx，小商城后端业务错误码，具体见litemall-wx-api模块的`WxResponseCode`类。
+
+需要指出的是，小商场后端可能返回4xx、5xx和6xx错误码；管理后台后端则可能返回4xx、5xx和7xx错误码。
+这样设计原因是方便小商场前端和管理后台前端区别对待。
+
+小商城前端处理后端响应错误码，存在三种处理方式：
+* 如果是4xx，说明前端开发者请求后端API时使用方式存在问题。
+例如，后端需要参数“name”，但是前端却没有传值，这个时候后端返回”用户名不对“
+没有任何意义，因为这里前端使用错误。相反，简单地返回“参数不对”反而会及早提醒
+前端开发者使用出现了问题。
+* 如果是5xx，（除501外）说明后端系统出现错误，后端开发者应该修复或者优化，此外
+前端可以在请求响应处统一处理5xx错误，而不是把错误信息返回到具体页面。
+例如，后端返回“更新数据失败”，说明数据库更新时出现异常，因此前端请求响应处
+统一简单报错“系统出错，联系管理员”，这样管理员可以及时联系后端开发者。而后端开发者
+则需要评估具体错误码和错误信息，例如这里的“更新数据失败”很可能是数据表调整字段
+导致Java代码的模型对象和数据库表不一致，此时后端开发者就可以及时修复。
+此外，对于501验证失败，则前端请求响应处可以统一处理跳转登录页面。
+* 如果是6xx，则说明是具体业务错误，此时前端需要在业务具体页面显示错误信息即可，同时
+这里也要求后端开发者书写良好友好的业务错误信息，因为会向最终用户显示。
+
+和小商场前端类似，管理后台前端处理后端响应错误码也存在三种类似的处理方式。
+
+注意：
+> 这里的4xx和5xx错误码，和HTTP中的4xx和5xx状态码不是一个概念。
+
+### 1.7.7 TODO
+
+本项目存在一些TODO，**强烈建议**开发者上线前仔细审阅是否存在问题和做相应调整。
+开发者可以使用IDE找到这些TODO。
+
+下面列出一些重要的TODO：
+
+#### 1.7.7.1 微信退款TODO
+
+管理后台管理员点击退款按钮时，管理后台会通过微信退款API请求微信商户平台退款。
+但是从安全角度考虑，**强烈建议**开发者删除微信退款代码，而登录微信商户平台手动退款。
+或者开发者添加安全相关代码，例如实现短信验证码。
+
+见`AdminOrderController`类
+
+再次提醒，本项目不承担任何使用后果。
+
+#### 1.7.7.2 未完善TODO
+
+有些业务只是实现基本功能，因此这里TODO提醒开发者自行思考。
+
+#### 1.7.7.3 重构TODO
+
+有些业务需求不是很清晰，导致实现时可能存在不合理地方，这里TODO提醒
+开发者审阅代码逻辑。

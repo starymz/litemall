@@ -1,9 +1,9 @@
 package org.linlinjava.litemall.db.service;
 
 import com.github.pagehelper.PageHelper;
+import org.linlinjava.litemall.db.dao.LitemallAdMapper;
 import org.linlinjava.litemall.db.domain.LitemallAd;
 import org.linlinjava.litemall.db.domain.LitemallAdExample;
-import org.linlinjava.litemall.db.dao.LitemallAdMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -40,21 +40,6 @@ public class LitemallAdService {
 
         PageHelper.startPage(page, limit);
         return adMapper.selectByExample(example);
-    }
-
-    public int countSelective(String name, String content, Integer page, Integer size, String sort, String order) {
-        LitemallAdExample example = new LitemallAdExample();
-        LitemallAdExample.Criteria criteria = example.createCriteria();
-
-        if (!StringUtils.isEmpty(name)) {
-            criteria.andNameLike("%" + name + "%");
-        }
-        if (!StringUtils.isEmpty(content)) {
-            criteria.andContentLike("%" + content + "%");
-        }
-        criteria.andDeletedEqualTo(false);
-
-        return (int) adMapper.countByExample(example);
     }
 
     public int updateById(LitemallAd ad) {

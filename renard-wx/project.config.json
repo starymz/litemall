@@ -5,12 +5,15 @@
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"uglifyFileName": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.0",
+	"libVersion": "2.4.0",
 	"appid": "wxa5b486c6b918ecfb",
 	"projectname": "Renard",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -47,18 +50,6 @@
 					"name": "专题详情",
 					"pathName": "pages/topicDetail/topicDetail",
 					"query": "id=314"
-				},
-				{
-					"id": -1,
-					"name": "专题评论列表",
-					"pathName": "pages/topicComment/topicComment",
-					"query": "valueId=314&type=1"
-				},
-				{
-					"id": -1,
-					"name": "专题评论添加",
-					"pathName": "pages/topicCommentPost/topicCommentPost",
-					"query": "valueId=314&type=1"
 				},
 				{
 					"id": -1,
@@ -176,12 +167,6 @@
 				},
 				{
 					"id": -1,
-					"name": "我的足迹",
-					"pathName": "pages/ucenter/footprint/footprint",
-					"query": ""
-				},
-				{
-					"id": -1,
 					"name": "我的地址",
 					"pathName": "pages/ucenter/address/address",
 					"query": ""
@@ -196,18 +181,6 @@
 					"id": -1,
 					"name": "登录",
 					"pathName": "pages/auth/login/login",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "注册",
-					"pathName": "pages/auth/register/register",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "找回密码",
-					"pathName": "pages/auth/reset/reset",
 					"query": ""
 				}
 			]

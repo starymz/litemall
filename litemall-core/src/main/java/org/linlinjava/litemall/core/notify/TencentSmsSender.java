@@ -5,7 +5,6 @@ import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
@@ -36,7 +35,7 @@ public class TencentSmsSender implements SmsSender {
             smsResult.setResult(result);
             return smsResult;
         } catch (HTTPException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         return null;
@@ -53,7 +52,7 @@ public class TencentSmsSender implements SmsSender {
             smsResult.setResult(result);
             return smsResult;
         } catch (HTTPException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         return null;

@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 类目服务
+ */
 @RestController
 @RequestMapping("/wx/catalog")
 @Validated
@@ -27,32 +30,30 @@ public class WxCatalogController {
     @Autowired
     private LitemallCategoryService categoryService;
 
+    @GetMapping("/getfirstcategory")
+    public Object getFirstCategory() {
+        // 所有一级分类目录
+        List<LitemallCategory> l1CatList = categoryService.queryL1();
+        return ResponseUtil.ok(l1CatList);
+    }
+
+    @GetMapping("/getsecondcategory")
+    public Object getSecondCategory(@NotNull Integer id) {
+        // 所有二级分类目录
+        List<LitemallCategory> currentSubCategory = categoryService.queryByPid(id);
+        return ResponseUtil.ok(currentSubCategory);
+    }
+
     /**
-     * 分类栏目
+     * 分类详情
      *
-     * @param id   分类类目ID
+     * @param id   分类类目ID。
      *             如果分类类目ID是空，则选择第一个分类类目。
      *             需要注意，这里分类类目是一级类目
-     * @param page 分页页数
-     * @param size 分页大小
-     * @return 分类栏目
-     * 成功则
-     * {
-     * errno: 0,
-     * errmsg: '成功',
-     * data:
-     * {
-     * categoryList: xxx,
-     * currentCategory: xxx,
-     * currentSubCategory: xxx
-     * }
-     * }
-     * 失败则 { errno: XXX, errmsg: XXX }
+     * @return 分类详情
      */
     @GetMapping("index")
-    public Object index(Integer id,
-                        @RequestParam(defaultValue = "1") Integer page,
-                        @RequestParam(defaultValue = "10") Integer size) {
+    public Object index(Integer id) {
 
         // 所有一级分类目录
         List<LitemallCategory> l1CatList = categoryService.queryL1();
@@ -79,9 +80,9 @@ public class WxCatalogController {
     }
 
     /**
-     * 一次性获取全部分类数据
+     * 所有分类数据
      *
-     * @return
+     * @return 所有分类数据
      */
     @GetMapping("all")
     public Object queryAll() {
@@ -127,22 +128,14 @@ public class WxCatalogController {
      *
      * @param id 分类类目ID
      * @return 当前分类栏目
-     * 成功则
-     * {
-     * errno: 0,
-     * errmsg: '成功',
-     * data:
-     * {
-     * currentCategory: xxx,
-     * currentSubCategory: xxx
-     * }
-     * }
-     * 失败则 { errno: XXX, errmsg: XXX }
      */
     @GetMapping("current")
     public Object current(@NotNull Integer id) {
         // 当前分类
         LitemallCategory currentCategory = categoryService.findById(id);
+        if(currentCategory == null){
+            return ResponseUtil.badArgumentValue();
+        }
         List<LitemallCategory> currentSubCategory = categoryService.queryByPid(currentCategory.getId());
 
         Map<String, Object> data = new HashMap<String, Object>();

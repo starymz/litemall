@@ -7,9 +7,7 @@ Page({
   data: {
     id: 0,
     topic: {},
-    topicList: [],
-    commentCount: 0,
-    commentList: []
+    topicList: []
   },
 
   onShareAppMessage: function() {
@@ -45,46 +43,16 @@ Page({
     }).then(function(res) {
       if (res.errno === 0) {
         that.setData({
-          topicList: res.data
+          topicList: res.data.list
         });
       }
     });
-  },
-  getCommentList() {
-    let that = this;
-    util.request(api.CommentList, {
-      valueId: that.data.id,
-      type: 1,
-      showType: 0,
-      page: 1,
-      size: 5
-    }).then(function(res) {
-      if (res.errno === 0) {
-
-        that.setData({
-          commentList: res.data.data,
-          commentCount: res.data.count
-        });
-      }
-    });
-  },
-  postComment() {
-    if (!app.globalData.hasLogin) {
-      wx.navigateTo({
-        url: "/pages/auth/login/login"
-      });
-    } else {
-      wx.navigateTo({
-        url: '/pages/topicCommentPost/topicCommentPost?valueId=' + this.data.id + '&type=1',
-      })
-    }
   },
   onReady: function() {
 
   },
   onShow: function() {
     // 页面显示
-    this.getCommentList();
   },
   onHide: function() {
     // 页面隐藏

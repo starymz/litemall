@@ -22,6 +22,7 @@ public class LitemallGrouponRulesService {
     private LitemallGrouponRulesMapper mapper;
     @Resource
     private LitemallGoodsMapper goodsMapper;
+    private LitemallGoods.Column[] goodsColumns = new LitemallGoods.Column[]{LitemallGoods.Column.id, LitemallGoods.Column.name, LitemallGoods.Column.brief, LitemallGoods.Column.picUrl, LitemallGoods.Column.counterPrice, LitemallGoods.Column.retailPrice};
 
     public int createRules(LitemallGrouponRules rules) {
         rules.setAddTime(LocalDateTime.now());
@@ -56,43 +57,20 @@ public class LitemallGrouponRulesService {
     /**
      * 获取首页团购活动列表
      *
-     * @param offset
+     * @param page
      * @param limit
      * @return
      */
-    public List<Map<String, Object>> queryList(int offset, int limit) {
-        return queryList(offset, limit, "add_time", "desc");
+    public List<LitemallGrouponRules> queryList(Integer page, Integer limit) {
+        return queryList(page, limit, "add_time", "desc");
     }
 
-    private LitemallGoods.Column[] goodsColumns = new LitemallGoods.Column[]{LitemallGoods.Column.id, LitemallGoods.Column.name, LitemallGoods.Column.brief, LitemallGoods.Column.picUrl, LitemallGoods.Column.counterPrice, LitemallGoods.Column.retailPrice};
-    public List<Map<String, Object>> queryList(int offset, int limit, String sort, String order) {
+    public List<LitemallGrouponRules> queryList(Integer page, Integer limit, String sort, String order) {
         LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
         example.or().andDeletedEqualTo(false);
         example.setOrderByClause(sort + " " + order);
-        PageHelper.startPage(offset, limit);
-        List<LitemallGrouponRules> grouponRules = mapper.selectByExample(example);
-
-        List<Map<String, Object>> grouponList =  new ArrayList<>(grouponRules.size());
-        for (LitemallGrouponRules rule : grouponRules) {
-            Integer goodsId = rule.getGoodsId();
-            LitemallGoods goods = goodsMapper.selectByPrimaryKeySelective(goodsId, goodsColumns);
-            if (goods == null)
-                continue;
-
-            Map<String, Object> item = new HashMap<>();
-            item.put("goods", goods);
-            item.put("groupon_price", goods.getRetailPrice().subtract(rule.getDiscount()));
-            item.put("groupon_member", rule.getDiscountMember());
-            grouponList.add(item);
-        }
-
-        return grouponList;
-    }
-
-    public int countList(int offset, int limit, String sort, String order) {
-        LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
-        example.or().andDeletedEqualTo(false);
-        return (int)mapper.countByExample(example);
+        PageHelper.startPage(page, limit);
+        return mapper.selectByExample(example);
     }
 
     /**
@@ -127,18 +105,6 @@ public class LitemallGrouponRulesService {
 
         PageHelper.startPage(page, size);
         return mapper.selectByExample(example);
-    }
-
-    public int countSelective(String goodsId, Integer page, Integer limit, String sort, String order) {
-        LitemallGrouponRulesExample example = new LitemallGrouponRulesExample();
-        LitemallGrouponRulesExample.Criteria criteria = example.createCriteria();
-
-        if (!StringUtils.isEmpty(goodsId)) {
-            criteria.andGoodsIdEqualTo(Integer.parseInt(goodsId));
-        }
-        criteria.andDeletedEqualTo(false);
-
-        return (int) mapper.countByExample(example);
     }
 
     public void delete(Integer id) {

@@ -1,11 +1,12 @@
 package org.linlinjava.litemall.core.storage;
 
 import com.qiniu.common.QiniuException;
-import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
@@ -17,7 +18,9 @@ import java.util.stream.Stream;
 
 public class QiniuStorage implements Storage {
 
-    private  String endpoint;
+    private final Log logger = LogFactory.getLog(QiniuStorage.class);
+
+    private String endpoint;
     private String accessKey;
     private String secretKey;
     private String bucketName;
@@ -62,8 +65,8 @@ public class QiniuStorage implements Storage {
      */
     @Override
     public void store(InputStream inputStream, long contentLength, String contentType, String keyName) {
-        if(uploadManager == null){
-            if(auth == null) {
+        if (uploadManager == null) {
+            if (auth == null) {
                 auth = Auth.create(accessKey, secretKey);
             }
             uploadManager = new UploadManager(new Configuration());
@@ -71,9 +74,9 @@ public class QiniuStorage implements Storage {
 
         try {
             String upToken = auth.uploadToken(bucketName);
-            Response response = uploadManager.put(inputStream, keyName, upToken, null, contentType);
+            uploadManager.put(inputStream, keyName, upToken, null, contentType);
         } catch (QiniuException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
         }
     }
 
@@ -94,28 +97,25 @@ public class QiniuStorage implements Storage {
             Resource resource = new UrlResource(url);
             if (resource.exists() || resource.isReadable()) {
                 return resource;
-            } else {
-                return null;
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
+            logger.error(e.getMessage(), e);
         }
+        return null;
     }
 
     @Override
     public void delete(String keyName) {
-        if(bucketManager == null){
-            if(auth == null) {
+        if (bucketManager == null) {
+            if (auth == null) {
                 auth = Auth.create(accessKey, secretKey);
             }
-            bucketManager = new BucketManager(auth, new Configuration() );
+            bucketManager = new BucketManager(auth, new Configuration());
         }
-
         try {
             bucketManager.delete(bucketName, keyName);
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
     }
 

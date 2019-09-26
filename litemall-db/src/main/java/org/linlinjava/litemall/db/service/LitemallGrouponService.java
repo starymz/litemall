@@ -3,15 +3,13 @@ package org.linlinjava.litemall.db.service;
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import org.linlinjava.litemall.db.dao.LitemallGrouponMapper;
-import org.linlinjava.litemall.db.domain.*;
+import org.linlinjava.litemall.db.domain.LitemallGroupon;
+import org.linlinjava.litemall.db.domain.LitemallGrouponExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class LitemallGrouponService {
@@ -134,19 +132,5 @@ public class LitemallGrouponService {
 
         PageHelper.startPage(page, size);
         return mapper.selectByExample(example);
-    }
-
-    public int countSelective(String rulesId, Integer page, Integer limit, String sort, String order) {
-        LitemallGrouponExample example = new LitemallGrouponExample();
-        LitemallGrouponExample.Criteria criteria = example.createCriteria();
-
-        if (!StringUtils.isEmpty(rulesId)) {
-            criteria.andRulesIdEqualTo(Integer.parseInt(rulesId));
-        }
-        criteria.andDeletedEqualTo(false);
-        criteria.andPayedEqualTo(true);
-        criteria.andGrouponIdEqualTo(0);
-
-        return (int) mapper.countByExample(example);
     }
 }
